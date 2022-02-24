@@ -2141,20 +2141,12 @@ def SdkLocatePython(prefer_thirdparty_python=False):
 
         # Determine which version it is by checking which dll is in the directory.
         if (GetOptimize() <= 2):
-        if GetLinkAllStatic():
-            if (GetOptimize() <= 2):
-                py_dlls = glob.glob(SDK["PYTHON"] + "/libs/python[0-9][0-9]_d.lib") + \
-                          glob.glob(SDK["PYTHON"] + "/libs/python[0-9][0-9][0-9]_d.lib")
-            else:
-                py_dlls = glob.glob(SDK["PYTHON"] + "/libs/python[0-9][0-9].lib") + \
-                          glob.glob(SDK["PYTHON"] + "/libs/python[0-9][0-9][0-9].lib")
+        if (GetOptimize() <= 2):
+            py_dlls = glob.glob(SDK["PYTHON"] + "/libs/python[0-9][0-9]_d.lib") + \
+                      glob.glob(SDK["PYTHON"] + "/libs/python[0-9][0-9][0-9]_d.lib")
         else:
-            if (GetOptimize() <= 2):
-                py_dlls = glob.glob(SDK["PYTHON"] + "/python[0-9][0-9]_d.dll") + \
-                          glob.glob(SDK["PYTHON"] + "/python[0-9][0-9][0-9]_d.dll")
-            else:
-                py_dlls = glob.glob(SDK["PYTHON"] + "/python[0-9][0-9].dll") + \
-                          glob.glob(SDK["PYTHON"] + "/python[0-9][0-9][0-9].dll")
+            py_dlls = glob.glob(SDK["PYTHON"] + "/libs/python[0-9][0-9].lib") + \
+                      glob.glob(SDK["PYTHON"] + "/libs/python[0-9][0-9][0-9].lib")
 
         if len(py_dlls) == 0:
             exit("Could not find the Python dll in %s." % (SDK["PYTHON"]))
