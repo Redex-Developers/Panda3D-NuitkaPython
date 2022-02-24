@@ -3105,7 +3105,7 @@ if tp_dir is not None:
                     pydll += "_d.dll"
                 else:
                     pydll += ".dll"
-                CopyFile(GetOutputDir() + "/bin" + pydll, SDK["PYTHON"] + pydll)
+                #CopyFile(GetOutputDir() + "/bin" + pydll, SDK["PYTHON"] + pydll)
 
             for fn in glob.glob(SDK["PYTHON"] + "/vcruntime*.dll"):
                 CopyFile(GetOutputDir() + "/bin/", fn)
