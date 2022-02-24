@@ -495,7 +495,7 @@ ns_get_binary_name() const {
 string ExecutionEnvironment::
 ns_get_dtool_name() const {
   if (_dtool_name.empty()) {
-    return "unknown";
+    return ns_get_binary_name();
   }
   return _dtool_name;
 }
