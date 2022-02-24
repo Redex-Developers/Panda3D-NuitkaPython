@@ -14,7 +14,7 @@ import struct
 from sysconfig import get_platform, get_config_var
 from optparse import OptionParser
 from base64 import urlsafe_b64encode
-from makepandacore import LocateBinary, GetExtensionSuffix, SetVerbose, GetVerbose, GetMetadataValue, CrossCompiling, GetThirdpartyDir, SDK, GetStrip
+from makepandacore import LocateBinary, GetExtensionSuffix, SetVerbose, GetVerbose, GetMetadataValue, CrossCompiling, GetThirdpartyDir, SDK, GetStrip, GetLinkAllStatic
 
 
 def get_abi_tag():
@@ -65,11 +65,10 @@ def is_fat_file(path):
 
 
 def get_python_ext_module_dir():
-    if CrossCompiling():
-        return os.path.join(GetThirdpartyDir(), "python", "lib", SDK["PYTHONVERSION"], "lib-dynload")
-    else:
-        import _ctypes
-        return os.path.dirname(_ctypes.__file__)
+    import sysconfig
+    return sysconfig.get_config_var('BINLIBDEST')
+    import _ctypes
+    return os.path.dirname(_ctypes.__file__)
 
 
 if sys.platform in ('win32', 'cygwin'):
@@ -351,7 +350,7 @@ class WheelFile(object):
         self.platform = platform
 
         wheel_name = "{0}-{1}-{2}-{3}-{4}.whl".format(
-            name, version, PY_VERSION, ABI_TAG, platform)
+            name, version, "py39", "none", platform)
 
         print("Writing %s" % (wheel_name))
         self.zip_file = zipfile.ZipFile(wheel_name, 'w', zipfile.ZIP_DEFLATED)
@@ -671,7 +670,7 @@ def makewheel(version, output_dir, platform=None):
     models_dir = join(output_dir, "models")
     etc_dir = join(output_dir, "etc")
     bin_dir = join(output_dir, "bin")
-    if is_windows:
+    if is_windows and not GetLinkAllStatic()::
         libs_dir = join(output_dir, "bin")
     else:
         libs_dir = join(output_dir, "lib")
@@ -738,7 +737,7 @@ def makewheel(version, output_dir, platform=None):
             pylib_path = os.path.join(libdir, pylib_name)
 
     # If Python was linked statically, we don't need to include this.
-    if not pylib_name.endswith('.a'):
+    if not pylib_name.endswith('.a') and os.path.exists(pylib_path):
         whl.write_file('deploy_libs/' + pylib_name, pylib_path)
 
     # Add the trees with Python modules.
@@ -779,6 +778,12 @@ if __debug__:
                 target_path = 'panda3d/' + file
 
             whl.write_file(target_path, source_path)
+
+    for file in os.listdir(libs_dir):
+        if file.startswith("libpy.panda3d."):
+            whl.write_file("panda3d/" + file[14:], os.path.join(libs_dir, file))
+        else:
+            whl.write_file("panda3d/lib/" + file, os.path.join(libs_dir, file))
 
     # And copy the extension modules from the Python installation into the
     # deploy_libs directory, for use by deploy-ng.
