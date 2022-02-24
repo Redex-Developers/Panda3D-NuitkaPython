@@ -2980,7 +2980,7 @@ if PkgSkip("DX9"):
 if PkgSkip("TINYDISPLAY") or GetLinkAllStatic():
     configprc = configprc.replace("\n#load-display p3tinydisplay", "")
 
-if PkgSkip("OPENAL")):
+if PkgSkip("OPENAL"):
     configprc = configprc.replace("audio-library-name p3openal_audio", "#audio-library-name p3openal_audio")
 
 if GetTarget() == 'windows':
