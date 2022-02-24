@@ -1729,7 +1729,6 @@ def CompileLink(dll, obj, opts):
             cmd = "link /nologo "
             if HasTargetArch():
                 cmd += " /MACHINE:" + GetTargetArch().upper()
-            if ("MFC" not in opts):
             if not GetLinkAllStatic() and "MFC" not in opts:
                 cmd += " /NOD:MFC90.LIB /NOD:MFC80.LIB /NOD:LIBCMT"
             if (GetOrigExt(dll) != ".exe"): cmd += " /DLL"
