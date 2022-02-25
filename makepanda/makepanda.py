@@ -625,7 +625,7 @@ if (COMPILER == "MSVC"):
     LibName("WINOLE", "ole32.lib")
     LibName("WINOLEAUT", "oleaut32.lib")
     LibName("WINOLDNAMES", "oldnames.lib")
-    LibName("WINSHELL", "shell32.lib")
+    LibName("WINSHELL", "Shell32.lib")
     LibName("WINGDI", "gdi32.lib")
     LibName("ADVAPI", "advapi32.lib")
     LibName("IPHLPAPI", "iphlpapi.lib")
